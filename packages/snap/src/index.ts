@@ -1,6 +1,14 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
+const lensLookup = async function(name:String) { 
+  const query = `query Profile { profile(request: { handle: "${name}" }) { ownedBy } }`; 
+  const result = await fetch('https://api.lens.dev/?query='+encodeURIComponent(query)+'&operationName=Profile'); 
+  return result.json(); 
+}; 
+
+const query = 'query Profile { profile(request: { handle: "m0nt0y4.lens" }) { ownedBy } }'; 
+
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -11,20 +19,39 @@ import { panel, text } from '@metamask/snaps-ui';
  * @returns The result of `snap_dialog`.
  * @throws If the request method is not valid for this snap.
  */
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {
   switch (request.method) {
     case 'hello':
+      const query = await snap.request({ 
+        method: 'snap_dialog', 
+        params: { 
+          type: 'prompt', 
+          content: panel([
+            text('**Lookup a Lens ID**'), 
+            text('Enter the name to lookup:'), 
+          ]), 
+        }
+      }); 
+      const response = []; 
+      if(typeof query == 'string') { 
+        const result = await lensLookup(query.trim()); 
+        const profile = result.data.profile; 
+        if(profile && profile.hasOwnProperty("ownedBy")) { 
+          response.push(text(`**Address found for ${query}!**`)); 
+          response.push(text(profile.ownedBy)); 
+        }
+        else { 
+          response.push(text(`No address was found for ${query}.`)); 
+        }
+      }
+      else { 
+        response.push(text('Please enter a name to lookup!')); 
+      }
       return snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
-          ]),
+          type: 'alert',
+          content: panel(response),
         },
       });
     default:
