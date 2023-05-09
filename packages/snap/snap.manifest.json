@@ -1,18 +1,18 @@
 {
-  "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example Snap",
+  "version": "0.1.1",
+  "description": "Get an onchain address for a Lens ID.",
+  "proposedName": "Lens Lookup",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/Montoya/lens-lookup.git"
   },
   "source": {
-    "shasum": "qtlzcdb2TXa0WlEuHfvwtua2Egsu7VpnpjiC9oew0qc=",
+    "shasum": "FSbcz6ipLVXJCxJtb/YEk55TCqSmcUay2dTNgplK6v4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "snap",
+        "packageName": "lens-lookup",
         "registry": "https://registry.npmjs.org/"
       }
     }
