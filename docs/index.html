@@ -20,7 +20,7 @@
   <body>
     <div id="page">
       <div id="content">
-        <button class="disconnected" id="connect" style="display:none">Lookup a Lens ID</button>
+        <button class="disconnected" id="connect">Lookup a Lens ID</button>
         <p id="unavailable">You need MetaMask Flask to use this dapp.<br><a href="https://metamask.io/flask/">Get MetaMask Flask</a></p>
       </div>
     </div>
@@ -28,9 +28,6 @@
 
   <script>
     const snapId = `npm:lens-lookup`;
-
-    const connectButton = document.getElementById('connect')
-    connectButton.addEventListener('click', connect)
 
     // here we get permissions to interact with and install the snap
     async function connect () {
@@ -69,9 +66,12 @@
     }; 
 
     window.onload = async (event) => {
+      const connectButton = document.getElementById('connect')
+      connectButton.style.display = 'none'; 
+      connectButton.addEventListener('click', connect)
       const isFlaskDetected = await isFlask(); 
       if(isFlaskDetected) {
-        document.getElementById('connect').style.display = 'inline-block'; 
+        connectButton.style.display = 'inline-block'; 
         document.getElementById('unavailable').style.display = 'none'; 
       }
     }; 
