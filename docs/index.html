@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Lens Lookup</title>
+    <link rel="icon" type="image/svg" href="./images/icon.svg"/>
+    <style type="text/css">
+      body { background:#063; color:#fff; margin:0; padding:0; font-family:sans-serif; }
+      #page { width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;}
+      #content { max-width:30rem; padding:18px; border:0 solid #fafafa; border-radius:2px; }
+      h1, p, input, button { font-size:1.5rem; font-weight:400; font-family:inherit; }
+      a, a:visited, a:focus { color:#fafafa; }
+      input { font-size:1.2rem; background-color:#222; color:#fafafa; border-width:0 0 1px 0; border-color:#fafafa; padding-bottom:2px; outline:none; }
+      #questionInput { width:24rem; }
+      button { background-color:#222; color:#fafafa; border:1px solid #fafafa; border-radius:2px; padding:3px 6px; cursor:pointer; }
+      button:active { border-color:#aaa; color:#aaa; }
+      .connected, #unavailable { display:none; }
+    </style>
+  </head>
+
+  <body>
+    <div id="page">
+      <div id="content">
+        <button class="disconnected" id="connect" style="display:none">Lookup a Lens ID</button>
+        <p id="unavailable">You need MetaMask Flask to use this dapp.<br><a href="https://metamask.io/flask/">Get MetaMask Flask</a></p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const snapId = `npm:lens-lookup`;
+
+    const connectButton = document.getElementById('connect')
+    connectButton.addEventListener('click', connect)
+
+    // here we get permissions to interact with and install the snap
+    async function connect () {
+      let requestParams = {}; 
+      requestParams[snapId] = {}; 
+      const result = await ethereum.request({
+        method: 'wallet_requestSnaps',
+        params: requestParams, 
+      }); 
+      
+      if(result) { 
+        const response = await ethereum.request({
+          method: 'wallet_invokeSnap',
+          params: { 
+            snapId: snapId, 
+            request: { method: 'hello' }, 
+          }
+        }); 
+      }
+    }
+
+    const isFlask = async () => {
+      const provider = window.ethereum;
+
+      try {
+        const clientVersion = await provider?.request({
+          method: 'web3_clientVersion',
+        });
+
+        const isFlaskDetected = (clientVersion)?.includes('flask');
+
+        return provider && isFlaskDetected;
+      } catch {
+        return false;
+      }
+    }; 
+
+    window.onload = async (event) => {
+      const isFlaskDetected = await isFlask(); 
+      if(isFlaskDetected) {
+        document.getElementById('connect').style.display = 'inline-block'; 
+        document.getElementById('unavailable').style.display = 'none'; 
+      }
+    }; 
+  </script>
+</html>
