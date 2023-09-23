@@ -7,7 +7,7 @@
     "url": "https://github.com/Montoya/lens-lookup.git"
   },
   "source": {
-    "shasum": "OiMsvzEGzhei9hcsLTXaF+J8Lb9ZmANWvDR+E+V9wuE=",
+    "shasum": "PJfNvKQthYRtFsvVInxYy9xVb3wuiqTYHb3yIzuIJKk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -18,7 +18,9 @@
     }
   },
   "initialPermissions": {
-    "endowment:name-lookup": {},
+    "endowment:name-lookup": [
+      "eip155:1"
+    ],
     "endowment:network-access": {},
     "endowment:rpc": {
       "dapps": true,

@@ -13,14 +13,14 @@ const lensLookup = async function (name: string) {
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
  * @param args - The request handler args as object.
- * @param args.content - The domain to be resolved.
+ * @param args.domain - The domain to be resolved.
  * @returns The result of the lens lookup.
  */
-export const onNameLookup = async ({ content }: any) => {
-  const result = await lensLookup(content);
+export const onNameLookup = async ({ domain }: any) => {
+  const result = await lensLookup(domain);
   const { profile } = result.data;
   if (profile?.ownedBy) {
-    return { resolvedAccount: profile.ownedBy };
+    return { resolvedAddress: profile.ownedBy };
   }
-  return { resolvedAccount: null };
+  return null;
 };
